@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ghar Sewa - My Profile</title>
+  <meta name="description" content="Manage your Ghar Sewa profile — update skills, qualifications, job preferences and more." />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js?v=20260522-v15" defer></script>
+</head>
+<body>
+<nav id="mainNav">
+  <a class="logo" href="index.html">
+    <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="#2ECC71" opacity="0.18"/>
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="none" stroke="#2ECC71" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M14 33V24h8v9" fill="none" stroke="#2ECC71" stroke-width="2"/>
+      <circle cx="26" cy="9" r="4" fill="#2ECC71"/>
+    </svg>
+    <span class="logo-text">GHAR <span>SEWA</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="search.html">Services</a></li>
+    <li><a href="features.html">Workspace</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="messages.html">Messages</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="profile.html" class="active">Profile</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="bell-btn" onclick="location.href='notifications.html'">🔔</button>
+    <a class="avatar" href="profile.html" title="Profile">👤</a>
+  </div>
+</nav>
+
+<section class="app-page">
+  <div class="section-header">
+    <p class="section-eyebrow">Account</p>
+    <h2>My Profile</h2>
+    <p class="section-copy">Manage your personal information, skills, qualifications, and preferences.</p>
+  </div>
+
+  <!-- Profile Info Card -->
+  <div class="page-stack">
+    <div class="page-card profile-info-card">
+      <div class="profile-header-row">
+        <div class="profile-avatar-big" id="profileAvatarBig">👤</div>
+        <div class="profile-header-info">
+          <h3 id="profileDisplayName">Loading...</h3>
+          <p id="profileDisplayEmail" class="profile-meta">—</p>
+          <span class="profile-role-badge" id="profileRoleBadge">—</span>
+        </div>
+      </div>
+
+      <div class="profile-info-grid">
+        <div class="profile-info-item">
+          <label>📧 Email</label>
+          <span id="profileInfoEmail">—</span>
+        </div>
+        <div class="profile-info-item">
+          <label>📞 Phone</label>
+          <span id="profileInfoPhone">—</span>
+        </div>
+        <div class="profile-info-item">
+          <label>📅 Joined</label>
+          <span id="profileInfoJoined">—</span>
+        </div>
+        <div class="profile-info-item">
+          <label>🎭 Role</label>
+          <span id="profileInfoRole">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Editable Profile Fields -->
+    <div class="page-card" data-role-allow="provider,admin">
+      <h3 class="card-section-title">📝 Skills & Qualifications</h3>
+      <p class="page-note">Update your professional details so providers and customers can find the right match.</p>
+
+      <div class="profile-form-grid">
+        <div class="fg">
+          <label>Skills</label>
+          <textarea class="fc" id="profileSkills" rows="3" placeholder="e.g., Plumbing, Electrical wiring, Carpentry..."></textarea>
+        </div>
+        <div class="fg">
+          <label>Qualifications</label>
+          <textarea class="fc" id="profileQualifications" rows="3" placeholder="e.g., Licensed electrician, 5 years experience..."></textarea>
+        </div>
+        <div class="fg">
+          <label>Job Preferences</label>
+          <textarea class="fc" id="profilePreferences" rows="3" placeholder="e.g., Full-time, Kathmandu area, Rs 500-1000/hr..."></textarea>
+        </div>
+        <div class="fg" data-role-allow="provider,admin">
+          <label>Hiring Requirements</label>
+          <textarea class="fc" id="profileHiringReq" rows="3" placeholder="e.g., Looking for assistants with basic plumbing knowledge..."></textarea>
+        </div>
+      </div>
+
+      <div class="profile-btn-row">
+        <button class="sbtn" id="saveProfileBtn">💾 Save Profile</button>
+        <button class="sbtn alt-btn" id="loadProfileBtn">📥 Load Profile</button>
+      </div>
+      <div id="profileStatus" class="profile-status"></div>
+    </div>
+
+    <!-- Role-specific dashboard -->
+    <div class="page-card" data-role-allow="customer">
+      <h3 class="card-section-title">🛒 Customer Dashboard</h3>
+      <div class="dashboard-grid">
+        <div class="dash-item">
+          <div class="dash-icon">🔍</div>
+          <h4>Search Services</h4>
+          <p>Find plumbers, electricians, cleaners and more near you.</p>
+          <a href="search.html" class="dash-link">Browse Services →</a>
+        </div>
+        <div class="dash-item">
+          <div class="dash-icon">💬</div>
+          <h4>Messages</h4>
+          <p>Chat with service providers about your needs.</p>
+          <a href="messages.html" class="dash-link">Open Messages →</a>
+        </div>
+        <div class="dash-item">
+          <div class="dash-icon">⭐</div>
+          <h4>My Reviews</h4>
+          <p>See reviews you've written for providers.</p>
+          <a href="reviews.html" class="dash-link">View Reviews</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-card" data-role-allow="provider">
+      <h3 class="card-section-title">🔧 Provider Dashboard</h3>
+      <div class="dashboard-grid">
+        <div class="dash-item">
+          <div class="dash-icon">📋</div>
+          <h4>Post Job Listing</h4>
+          <p>Create job openings for customers to find you.</p>
+          <a href="features.html" class="dash-link">Post a Job →</a>
+        </div>
+        <div class="dash-item">
+          <div class="dash-icon">💬</div>
+          <h4>Messages</h4>
+          <p>Respond to customer inquiries and bookings.</p>
+          <a href="messages.html" class="dash-link">Open Messages →</a>
+        </div>
+        <div class="dash-item">
+          <div class="dash-icon">⭐</div>
+          <h4>Home Services</h4>
+          <p>Review service categories and customer-facing service listings.</p>
+          <a href="search.html" class="dash-link">Open Services</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-card" data-role-allow="admin">
+      <h3 class="card-section-title">🛡️ Admin Dashboard</h3>
+      <div class="dashboard-grid">
+        <div class="dash-item">
+          <div class="dash-icon">👥</div>
+          <h4>Manage Users</h4>
+          <p>View and manage customer and provider accounts.</p>
+          <a href="features.html#adminTools" class="dash-link">Manage Users →</a>
+        </div>
+        <div class="dash-item">
+          <div class="dash-icon">📋</div>
+          <h4>Job Listings</h4>
+          <p>Oversee all job postings on the platform.</p>
+          <a href="features.html#adminTools" class="dash-link">Manage Jobs →</a>
+        </div>
+        <div class="dash-item">
+          <div class="dash-icon">✅</div>
+          <h4>Approvals</h4>
+          <p>Approve new service provider registrations.</p>
+          <a href="features.html#adminTools" class="dash-link">Manage Approvals →</a>
+        </div>
+        <div class="dash-item">
+          <div class="dash-icon">⭐</div>
+          <h4>Customer Reviews</h4>
+          <p>View all submitted customer reviews and ratings.</p>
+          <a href="reviews.html" class="dash-link">View All Reviews →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand fcol">
+      <span class="logo-text" style="font-size:19px">GHAR <span>SEWA</span></span>
+      <p>Nepal's trusted platform connecting skilled home service workers with households across the country.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Ghar Sewa. Made with ❤️ for Nepal.</span>
+    <span>5th Semester Web Development Project</span>
+  </div>
+</footer>
+</body>
+</html>
+

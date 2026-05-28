@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ghar Sewa - Services</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js?v=20260522-v15" defer></script>
+</head>
+<body>
+<nav id="mainNav">
+  <a class="logo" href="index.html">
+    <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="#2ECC71" opacity="0.18"/>
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="none" stroke="#2ECC71" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M14 33V24h8v9" fill="none" stroke="#2ECC71" stroke-width="2"/>
+      <circle cx="26" cy="9" r="4" fill="#2ECC71"/>
+    </svg>
+    <span class="logo-text">GHAR <span>SEWA</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="search.html" class="active">Services</a></li>
+    <li><a href="features.html">Workspace</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="messages.html">Messages</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="profile.html">Profile</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="bell-btn" onclick="location.href='notifications.html'">🔔</button>
+    <a class="avatar" href="profile.html" title="Profile">👤</a>
+  </div>
+</nav>
+
+<div class="search-bar-section">
+  <div class="search-nav">
+    <a class="logo" href="index.html">
+      <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+        <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="#2ECC71" opacity="0.18"/>
+        <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="none" stroke="#2ECC71" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M14 33V24h8v9" fill="none" stroke="#2ECC71" stroke-width="2"/>
+        <circle cx="26" cy="9" r="4" fill="#2ECC71"/>
+      </svg>
+      <span class="logo-text">GHAR <span>SEWA</span></span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="search.html" class="active">Services</a></li>
+      <li><a href="features.html">Workspace</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="messages.html">Messages</a></li>
+      <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="profile.html">Profile</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="bell-btn" onclick="location.href='notifications.html'">🔔</button>
+      <a class="avatar" href="profile.html" title="Profile">👤</a>
+    </div>
+  </div>
+
+  <div class="search-bar-wrap">
+    <div class="search-input-box">
+      <input type="text" id="searchInput" placeholder="Plumber near me" oninput="liveSearch()"/>
+      <button class="search-icon-btn" onclick="runSearch()">🔍</button>
+    </div>
+    <button class="location-btn" id="useLocationBtn" type="button">Use my location for nearest providers</button>
+  </div>
+</div>
+
+<div class="main-content">
+  <div class="sidebar">
+    <div class="sidebar-title">Search Filter</div>
+    <div class="filter-group">
+      <div class="filter-heading">Category <span class="arrow">▲</span></div>
+      <ul class="filter-list" id="catList">
+        <li class="active" data-cat="all" onclick="setFilter('cat',this)"><div class="filter-dot"></div>All Services</li>
+        <li data-cat="plumber" onclick="setFilter('cat',this)"><div class="filter-dot"></div>Plumber</li>
+        <li data-cat="electrician" onclick="setFilter('cat',this)"><div class="filter-dot"></div>Electrician</li>
+        <li data-cat="cleaner" onclick="setFilter('cat',this)"><div class="filter-dot"></div>Cleaner</li>
+        <li data-cat="technician" onclick="setFilter('cat',this)"><div class="filter-dot"></div>Technician</li>
+        <li data-cat="health" onclick="setFilter('cat',this)"><div class="filter-dot"></div>Health Check Up</li>
+        <li data-cat="painter" onclick="setFilter('cat',this)"><div class="filter-dot"></div>Painter</li>
+        <li data-cat="cook" onclick="setFilter('cat',this)"><div class="filter-dot"></div>Cook / Chef</li>
+      </ul>
+    </div>
+    <div class="filter-group">
+      <div class="filter-heading">Sort By <span class="arrow">▲</span></div>
+      <ul class="filter-list" id="sortList">
+        <li class="active" data-sort="nearest" onclick="setFilter('sort',this)"><div class="filter-dot"></div>Nearest</li>
+        <li data-sort="relevant" onclick="setFilter('sort',this)"><div class="filter-dot"></div>Relevant</li>
+        <li data-sort="best" onclick="setFilter('sort',this)"><div class="filter-dot"></div>Best</li>
+        <li data-sort="new" onclick="setFilter('sort',this)"><div class="filter-dot"></div>New Agents</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="results-area">
+    <div class="results-heading" id="resHeading">Plumber near you</div>
+    <div class="providers-grid" id="grid"></div>
+  </div>
+</div>
+
+<div class="overlay" id="pdOverlay" onclick="closePD(event)">
+  <div class="modal">
+    <div class="pd-img" id="pdImg">🧑</div>
+    <div class="pd-body">
+      <div class="pd-name" id="pdName"></div>
+      <div class="pd-rating">
+        <span class="stars-row" id="pdStars"></span>
+        <span id="pdScore" style="font-weight:800;font-size:15px"></span>
+        <span id="pdRev" style="color:#aaa;font-size:13px"></span>
+        <span class="badge" id="pdBadge"></span>
+      </div>
+      <div class="pd-chips" id="pdChips"></div>
+      <div class="pd-desc" id="pdDesc"></div>
+      <div class="pd-actions">
+        <button class="sbtn" data-role-allow="customer" onclick="requestServiceFromSearch()">Request This Service</button>
+        <button class="sbtn alt-btn" data-role-allow="customer,admin" onclick="messageFromSearch()">Message Provider</button>
+        <button class="sbtn review-btn" data-role-allow="customer,admin" onclick="reviewFromSearch()">Write Review</button>
+      </div>
+      <div class="request-status" id="requestStatus" role="status" aria-live="polite"></div>
+    </div>
+    <button class="m-close" style="background:rgba(0,0,0,0.25)" onclick="closePD()">✕</button>
+  </div>
+</div>
+</body>
+</html>
+

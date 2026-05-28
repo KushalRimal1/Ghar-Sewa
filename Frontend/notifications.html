@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ghar Sewa - Notifications</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js?v=20260522-v15" defer></script>
+</head>
+<body>
+<nav id="mainNav">
+  <a class="logo" href="index.html">
+    <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="#2ECC71" opacity="0.18"/>
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="none" stroke="#2ECC71" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M14 33V24h8v9" fill="none" stroke="#2ECC71" stroke-width="2"/>
+      <circle cx="26" cy="9" r="4" fill="#2ECC71"/>
+    </svg>
+    <span class="logo-text">GHAR <span>SEWA</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="search.html">Services</a></li>
+    <li><a href="features.html">Workspace</a></li>
+    <li><a href="notifications.html" class="active">Notifications</a></li>
+    <li><a href="messages.html">Messages</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="profile.html">Profile</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="bell-btn" onclick="location.href='notifications.html'">!</button>
+    <a class="avatar" href="profile.html" title="Profile">U</a>
+  </div>
+</nav>
+
+<section class="app-page">
+  <div class="section-header">
+    <p class="section-eyebrow">Activity</p>
+    <h2>Notifications</h2>
+    <p class="section-copy">Notifications are separated by account type so every user sees only the updates that matter to their role.</p>
+  </div>
+
+  <div class="page-card page-stack" data-role-allow="customer">
+    <div class="screen-topbar">
+      <span>Customer Notifications</span>
+      <span class="screen-chip warn">Service updates</span>
+    </div>
+    <div class="notification-item highlight clickable-notification" onclick="location.href='messages.html?showRequests=1'">
+      <strong>Request Sent</strong>
+      <span>Today</span>
+      <p>Your service request was sent to the provider. You can continue the discussion in Messages.</p>
+    </div>
+    <div class="notification-item">
+      <strong>Provider Accepted</strong>
+      <span>Recent</span>
+      <p>Your selected worker accepted the request. Please check the agreed date and time.</p>
+    </div>
+    <div class="notification-item faded">
+      <strong>Review Reminder</strong>
+      <span>After service</span>
+      <p>Only customers can give reviews after the service is complete.</p>
+    </div>
+  </div>
+
+  <div class="page-card page-stack" data-role-allow="provider">
+    <div class="screen-topbar">
+      <span>Service Provider Notifications</span>
+      <span class="screen-chip warn">Work requests</span>
+    </div>
+    <div class="notification-item highlight clickable-notification" onclick="location.href='messages.html?showRequests=1'">
+      <strong>New Work Request</strong>
+      <span>Today</span>
+      <p>A customer requested your home service. Open Messages to confirm details.</p>
+    </div>
+    <div class="notification-item">
+      <strong>Profile Visibility</strong>
+      <span>Recent</span>
+      <p>Your skills and qualifications are visible to admin for verification, not to customers.</p>
+    </div>
+    <div class="notification-item faded">
+      <strong>Job Profile Update</strong>
+      <span>Reminder</span>
+      <p>Keep your job profile updated so customers can find the right service.</p>
+    </div>
+  </div>
+
+  <div class="page-card page-stack" data-role-allow="admin">
+    <div class="screen-topbar">
+      <span>Admin Notifications</span>
+      <span class="screen-chip warn">Full control</span>
+    </div>
+    <div class="notification-item highlight">
+      <strong>Provider Approval Needed</strong>
+      <span>Today</span>
+      <p>New service providers may require approval before they are trusted on the platform.</p>
+    </div>
+    <div class="notification-item">
+      <strong>Chat Monitoring Available</strong>
+      <span>Recent</span>
+      <p>Admin can view all chats between customers and service providers from Messages.</p>
+    </div>
+    <div class="notification-item faded">
+      <strong>Job Profile Review</strong>
+      <span>Reminder</span>
+      <p>Review open and closed job profiles from the admin workspace.</p>
+    </div>
+  </div>
+</section>
+</body>
+</html>
+

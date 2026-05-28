@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ghar Sewa - Reviews</title>
+  <meta name="description" content="Read and write reviews for Ghar Sewa service providers." />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js?v=20260522-v15" defer></script>
+</head>
+<body>
+<nav id="mainNav">
+  <a class="logo" href="index.html">
+    <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="#2ECC71" opacity="0.18"/>
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="none" stroke="#2ECC71" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M14 33V24h8v9" fill="none" stroke="#2ECC71" stroke-width="2"/>
+      <circle cx="26" cy="9" r="4" fill="#2ECC71"/>
+    </svg>
+    <span class="logo-text">GHAR <span>SEWA</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="search.html">Services</a></li>
+    <li><a href="features.html">Workspace</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="messages.html">Messages</a></li>
+    <li><a href="reviews.html" class="active">Reviews</a></li>
+    <li><a href="profile.html">Profile</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="bell-btn" onclick="location.href='notifications.html'">🔔</button>
+    <a class="avatar" href="profile.html" title="Profile">👤</a>
+  </div>
+</nav>
+
+<section class="app-page">
+  <div class="section-header">
+    <p class="section-eyebrow">Feedback</p>
+    <h2>Reviews</h2>
+    <p class="section-copy" id="reviewsSubtitle">Rate and review service providers, or see what customers say about you.</p>
+    <p style="margin-top:8px;">
+      <a href="features.html#adminTools" class="text-link" data-role-allow="admin">View all reviews (Admin)</a>
+    </p>
+  </div>
+
+  <div class="page-stack">
+    <!-- Write a Review (customers only) -->
+    <div class="page-card" id="writeReviewCard" data-role-allow="customer">
+      <h3 class="card-section-title">✍️ Write a Review</h3>
+      <div class="review-form">
+        <div class="fg">
+          <label>Select Service Provider</label>
+          <select class="fc" id="reviewProviderSelect">
+            <option value="">-- Choose a provider --</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label>Rating</label>
+          <div class="star-rating-input" id="starRatingInput">
+            <span class="star-btn" data-star="1">☆</span>
+            <span class="star-btn" data-star="2">☆</span>
+            <span class="star-btn" data-star="3">☆</span>
+            <span class="star-btn" data-star="4">☆</span>
+            <span class="star-btn" data-star="5">☆</span>
+            <span class="star-rating-label" id="starRatingLabel">Click to rate</span>
+          </div>
+          <input type="hidden" id="reviewRating" value="0" />
+        </div>
+        <div class="fg">
+          <label>Your Review</label>
+          <textarea class="fc" id="reviewComment" rows="4" placeholder="Share your experience with this service provider..."></textarea>
+        </div>
+        <button class="sbtn" id="submitReviewBtn">⭐ Submit Review</button>
+        <div id="reviewStatus" class="profile-status"></div>
+      </div>
+    </div>
+
+    <!-- Reviews List -->
+    <div class="page-card">
+      <h3 class="card-section-title" id="reviewsListTitle">📋 My Reviews</h3>
+      <div id="reviewsList" class="reviews-feed">
+        <p class="msg-empty-hint" style="text-align:center;padding:30px;">Loading reviews...</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand fcol">
+      <span class="logo-text" style="font-size:19px">GHAR <span>SEWA</span></span>
+      <p>Nepal's trusted platform connecting skilled home service workers with households across the country.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Ghar Sewa. Made with ❤️ for Nepal.</span>
+    <span>5th Semester Web Development Project</span>
+  </div>
+</footer>
+</body>
+</html>
+

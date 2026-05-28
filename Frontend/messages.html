@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ghar Sewa - Messages</title>
+  <meta name="description" content="Chat with service providers and customers on Ghar Sewa." />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js?v=20260522-v15" defer></script>
+</head>
+<body>
+<nav id="mainNav">
+  <a class="logo" href="index.html">
+    <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="#2ECC71" opacity="0.18"/>
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="none" stroke="#2ECC71" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M14 33V24h8v9" fill="none" stroke="#2ECC71" stroke-width="2"/>
+      <circle cx="26" cy="9" r="4" fill="#2ECC71"/>
+    </svg>
+    <span class="logo-text">GHAR <span>SEWA</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="search.html">Services</a></li>
+    <li><a href="features.html">Workspace</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="messages.html" class="active">Messages</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+      <li><a href="profile.html">Profile</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="bell-btn" onclick="location.href='notifications.html'">🔔</button>
+    <a class="avatar" href="profile.html" title="Profile">👤</a>
+  </div>
+</nav>
+
+<section class="app-page">
+  <div class="section-header">
+    <p class="section-eyebrow">Communication</p>
+    <h2>Messages</h2>
+    <p class="section-copy" id="messagesSubtitle">Chat is allowed only between customers and service providers.</p>
+  </div>
+
+  <div class="page-card msg-container">
+    <!-- Conversations sidebar -->
+    <div class="msg-sidebar">
+      <div class="msg-sidebar-header">
+        <h4>💬 Conversations</h4>
+        <button class="msg-new-btn" id="newConvoBtn" title="New Conversation">＋</button>
+      </div>
+      <div class="msg-contacts-list" id="msgContactsList">
+        <div class="msg-empty-state">
+          <p>No conversations yet</p>
+          <p class="msg-empty-hint">Click + to start chatting</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat area -->
+    <div class="msg-chat-area">
+      <div class="msg-chat-header" id="msgChatHeader">
+        <div class="msg-chat-header-info">
+          <span class="msg-partner-name" id="msgPartnerName">Select a conversation</span>
+          <span class="msg-partner-role" id="msgPartnerRole"></span>
+        </div>
+      </div>
+
+      <div class="msg-thread" id="msgThread">
+        <div class="msg-welcome-state">
+          <div class="msg-welcome-icon">💬</div>
+          <h3>Welcome to Messages</h3>
+          <p>Select a conversation from the left panel, or start a new one.</p>
+        </div>
+      </div>
+
+      <div class="msg-composer" id="msgComposer" style="display:none;">
+        <input type="text" class="msg-input" id="msgInput" placeholder="Type your message..." />
+        <button class="msg-send-btn" id="msgSendBtn">
+          <span>Send</span>
+          <span class="send-icon">➤</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- New Conversation Modal -->
+  <div class="overlay" id="newConvoOverlay" onclick="closeNewConvo(event)">
+    <div class="modal" style="width:380px;">
+      <div class="m-head">
+        <h2>New Message</h2>
+        <p id="newMessageSubtitle">Choose a service provider to message</p>
+      </div>
+      <button class="m-close" onclick="closeNewConvo()">✕</button>
+      <div class="m-body">
+        <div class="fg">
+          <label id="contactSearchLabel">Search providers</label>
+          <input class="fc" type="text" id="providerSearchInput" placeholder="Type a name..." oninput="filterProviderList()" />
+        </div>
+        <div class="provider-pick-list" id="providerPickList">
+          <p style="color:#aaa;text-align:center;padding:20px;">Loading providers...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand fcol">
+      <span class="logo-text" style="font-size:19px">GHAR <span>SEWA</span></span>
+      <p>Nepal's trusted platform connecting skilled home service workers with households across the country.</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 Ghar Sewa. Made with ❤️ for Nepal.</span>
+    <span>5th Semester Web Development Project</span>
+  </div>
+</footer>
+</body>
+</html>
+

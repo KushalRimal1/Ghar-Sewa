@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Ghar Sewa - API Debug</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1, h2 { color: #2ECC71; }
+        .success { color: green; padding: 10px; background: #e8f5e9; border-radius: 4px; margin: 10px 0; }
+        .error { color: red; padding: 10px; background: #ffebee; border-radius: 4px; margin: 10px 0; }
+        .info { color: #1976d2; padding: 10px; background: #e3f2fd; border-radius: 4px; margin: 10px 0; }
+        input, textarea, button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #2ECC71;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background: #27ae60; }
+        pre {
+            background: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        .test-section {
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>🔧 Ghar Sewa - API Debug & Test</h1>
+
+<div class="container">
+    <h2>1. Backend Connectivity Check</h2>
+    <button onclick="testConnectivity()">Test Backend Connection</button>
+    <div id="connectivityResult"></div>
+</div>
+
+<div class="container">
+    <h2>2. Send OTP Test</h2>
+    <input type="email" id="testEmail" placeholder="Enter email (e.g., admin@gharsewa.com)" value="admin@gharsewa.com"/>
+    <button onclick="testSendOTP()">Send OTP</button>
+    <div id="otpResult"></div>
+</div>
+
+<div class="container">
+    <h2>3. Browser Console Log</h2>
+    <button onclick="showConsoleLog()">Show Recent Console Logs</button>
+    <div id="consoleLog"></div>
+</div>
+
+<div class="container">
+    <h2>4. API Candidates Check</h2>
+    <button onclick="checkApiCandidates()">Check API Candidates</button>
+    <div id="candidatesResult"></div>
+</div>
+
+<script src="script.js?v=20260511-v2" defer></script>
+<script>
+async function testConnectivity() {
+    const div = document.getElementById('connectivityResult');
+    div.innerHTML = '<div class="info">Testing...</div>';
+    
+    try {
+        const response = await fetch('http://localhost:8000/Backend/login.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: 'test@test.com', password: 'test' })
+        });
+        
+        const contentType = response.headers.get('content-type');
+        div.innerHTML = `
+            <div class="success">
+                <strong>✓ Backend is reachable!</strong><br>
+                Status: ${response.status} ${response.statusText}<br>
+                Content-Type: ${contentType || 'none'}<br>
+            </div>
+        `;
+    } catch (error) {
+        div.innerHTML = `<div class="error"><strong>✗ Backend Error:</strong><br>${error.message}</div>`;
+    }
+}
+
+async function testSendOTP() {
+    const email = document.getElementById('testEmail').value;
+    const div = document.getElementById('otpResult');
+    
+    if (!email) {
+        div.innerHTML = '<div class="error">Please enter an email</div>';
+        return;
+    }
+    
+    div.innerHTML = '<div class="info">Sending OTP...</div>';
+    
+    try {
+        const response = await fetch('http://localhost:8000/Backend/forgot-password.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, action: 'send-otp' })
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
+        
+        div.innerHTML = `
+            <div class="success">
+                <strong>✓ OTP Request Successful!</strong><br>
+                Response: <pre>${JSON.stringify(data, null, 2)}</pre>
+            </div>
+        `;
+    } catch (error) {
+        div.innerHTML = `<div class="error"><strong>✗ OTP Error:</strong><br>${error.message}</div>`;
+    }
+}
+
+function checkApiCandidates() {
+    const div = document.getElementById('candidatesResult');
+    
+    if (typeof API_CANDIDATES === 'undefined') {
+        div.innerHTML = '<div class="error">API_CANDIDATES not found. Make sure script.js is loaded.</div>';
+        return;
+    }
+    
+    let html = '<div class="success"><strong>✓ API Candidates:</strong><ol>';
+    API_CANDIDATES.forEach((url, i) => {
+        html += `<li><code>${url}</code></li>`;
+    });
+    html += '</ol></div>';
+    div.innerHTML = html;
+}
+
+function showConsoleLog() {
+    const div = document.getElementById('consoleLog');
+    div.innerHTML = '<div class="info">Check your browser console (F12 → Console tab) for detailed logs</div>';
+}
+
+// Auto-check on load
+window.addEventListener('load', () => {
+    console.log('Debug page loaded');
+    console.log('API Candidates:', typeof API_CANDIDATES !== 'undefined' ? API_CANDIDATES : 'Not loaded');
+});
+</script>
+
+</body>
+</html>
+

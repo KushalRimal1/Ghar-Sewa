@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ghar Sewa - Role Workspace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css" />
+  <script src="script.js?v=20260522-v15" defer></script>
+</head>
+<body>
+<nav id="mainNav">
+  <a class="logo" href="index.html">
+    <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="#2ECC71" opacity="0.18"/>
+      <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="none" stroke="#2ECC71" stroke-width="2.2" stroke-linejoin="round"/>
+      <path d="M14 33V24h8v9" fill="none" stroke="#2ECC71" stroke-width="2"/>
+      <circle cx="26" cy="9" r="4" fill="#2ECC71"/>
+    </svg>
+    <span class="logo-text">GHAR <span>SEWA</span></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="search.html">Services</a></li>
+    <li><a href="features.html" class="active">Workspace</a></li>
+    <li><a href="notifications.html">Notifications</a></li>
+    <li><a href="messages.html">Messages</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="profile.html">Profile</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="bell-btn" onclick="location.href='notifications.html'">!</button>
+    <a class="avatar" href="profile.html" title="Profile">U</a>
+  </div>
+</nav>
+
+<section class="app-page features-page">
+  <div class="section-header">
+    <p class="section-eyebrow">Role Workspace</p>
+    <h2 id="workspaceTitle">Your Ghar Sewa tools</h2>
+    <p class="section-copy">The workspace changes by account type so customers, service providers, and admins do not see the same controls.</p>
+  </div>
+
+  <div class="workspace-layout">
+    <article class="page-card role-summary-card" data-role-allow="customer">
+      <span class="module-badge">Customer</span>
+      <h3>Request trusted home service</h3>
+      <p class="page-note">Customers can register, manage their profile, search services, request providers, message them, and write reviews.</p>
+      <div class="quick-actions">
+        <a class="sbtn" href="search.html">Search Service</a>
+        <a class="sbtn alt-btn" href="profile.html">Manage Profile</a>
+        <a class="sbtn muted-btn" href="messages.html">Messages</a>
+      </div>
+    </article>
+
+    <article class="page-card role-summary-card" data-role-allow="provider">
+      <span class="module-badge">Service Provider</span>
+      <h3>Manage your service business</h3>
+      <p class="page-note">Providers can register, manage their profile, message customers, and receive provider notifications.</p>
+      <div class="quick-actions">
+        <a class="sbtn alt-btn" href="profile.html">Manage Profile</a>
+        <a class="sbtn muted-btn" href="notifications.html">Notifications</a>
+      </div>
+    </article>
+
+    <article class="page-card role-summary-card" data-role-allow="admin">
+      <span class="module-badge">Admin</span>
+      <h3>Manage the complete platform</h3>
+      <p class="page-note">Admins can manage employees/providers, manage customers, and approve provider accounts.</p>
+      <div class="quick-actions">
+        <button class="sbtn" id="loadAdminBtn" type="button">Load Admin Data</button>
+        <a class="sbtn alt-btn" href="#adminTools">Admin Tools</a>
+      </div>
+    </article>
+
+    <article class="page-card feature-panel" data-role-allow="customer,provider,admin">
+      <div class="screen-topbar">
+        <span>Profile Management</span>
+        <span class="screen-chip">Shared</span>
+      </div>
+      <p class="page-note">Keep profile details updated. Providers and admins also get hiring requirements.</p>
+      <div class="feature-form-grid" data-role-allow="admin">
+        <select id="adminProfileProviderSelect" class="feature-input">
+          <option value="">Select service provider to manage</option>
+        </select>
+      </div>
+      <div class="feature-form-grid">
+        <textarea id="profileSkills" class="feature-input" placeholder="Skills or needed service"></textarea>
+        <textarea id="profileQualifications" class="feature-input" placeholder="Qualifications or service expectations"></textarea>
+        <textarea id="profilePreferences" class="feature-input" placeholder="Job preferences, location, budget, timing"></textarea>
+        <textarea id="profileHiringReq" class="feature-input" placeholder="Hiring requirements for providers/admins"></textarea>
+      </div>
+      <div class="feature-actions">
+        <button class="sbtn" id="saveProfileBtn" type="button">Save Profile</button>
+        <button class="sbtn alt-btn" id="loadProfileBtn" type="button">Load Profile</button>
+      </div>
+      <pre id="profileOutput" class="feature-output"></pre>
+    </article>
+
+    <article class="page-card feature-panel" id="adminTools" data-role-allow="admin">
+      <div class="screen-topbar">
+        <span>Admin Management</span>
+        <span class="screen-chip">Admin</span>
+      </div>
+      <div class="admin-tools-grid">
+        <div>
+          <h3 class="card-section-title">Employees / Providers</h3>
+          <div id="adminProviders" class="admin-list"></div>
+        </div>
+        <div>
+          <h3 class="card-section-title">Customers</h3>
+          <div id="adminCustomers" class="admin-list"></div>
+        </div>
+        <div>
+          <h3 class="card-section-title">Customer Reviews</h3>
+          <div id="adminReviews" class="admin-list"></div>
+        </div>
+        <div>
+          <h3 class="card-section-title">Payment Tracking</h3>
+          <div id="adminPayments" class="admin-list"></div>
+        </div>
+      </div>
+      <pre id="adminOutput" class="feature-output"></pre>
+    </article>
+  </div>
+</section>
+</body>
+</html>
+

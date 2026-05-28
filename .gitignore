@@ -1,0 +1,12 @@
+# Local environment files
+Backend/.env
+Backend/.env.local
+
+# Email / OTP logs
+Backend/otp_log.txt
+Backend/email_log.txt
+
+# OS and editor files
+Thumbs.db
+.DS_Store
+.vscode/
