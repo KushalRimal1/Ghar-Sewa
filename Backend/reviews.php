@@ -180,7 +180,7 @@ if ($action === 'providers') {
         "SELECT u.id, u.full_name, sp.category
          FROM users u
          LEFT JOIN service_providers sp ON sp.user_id = u.id
-         WHERE u.role = 'provider'
+         WHERE u.role = 'provider' AND COALESCE(sp.is_verified, 0) = 1
          ORDER BY u.full_name ASC"
     );
     $stmt->execute();

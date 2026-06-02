@@ -8,7 +8,7 @@
     --shape-blue: #EAF2FF;
     --accent-yellow: #FFD166;
 
-    --font-main: 'Inter', sans-serif;
+    --font-main: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
 
     --container-padding: 0 5%;
     --header-height: 80px;

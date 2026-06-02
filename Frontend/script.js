@@ -45,6 +45,7 @@ let searchQuery = '';
 let logoutButton = null;
 let loginButton = null;
 let serviceProviders = [];
+let serviceProvidersLoadedFromServer = false;
 let customerLocation = getSavedCustomerLocation();
 
 const STATIC_PROVIDER_DETAILS = {
@@ -94,7 +95,7 @@ const ROLE_HOME_PAGES = {
 };
 
 const ROLE_NAV_PAGES = {
-  customer: ['index.html', 'search.html', 'notifications.html', 'messages.html', 'reviews.html', 'profile.html'],
+  customer: ['index.html', 'search.html', 'features.html', 'notifications.html', 'messages.html', 'reviews.html', 'profile.html'],
   provider: ['index.html', 'search.html', 'features.html', 'notifications.html', 'messages.html', 'reviews.html', 'profile.html'],
   admin: ['index.html', 'search.html', 'features.html', 'notifications.html', 'messages.html', 'reviews.html', 'profile.html']
 };
@@ -374,6 +375,10 @@ function buildServiceProviderCard(provider, index) {
 
 function getProviderData() {
   const dynamicProviders = serviceProviders.map(buildServiceProviderCard).map(enrichProviderDistance);
+  if (serviceProvidersLoadedFromServer) {
+    return dynamicProviders;
+  }
+
   const dynamicUserIds = new Set(dynamicProviders.map(provider => String(provider.userId)));
   const sampleProviders = DATA
     .map(provider => ({ ...provider, ...(STATIC_PROVIDER_DETAILS[provider.id] || {}) }))
@@ -408,6 +413,7 @@ async function loadServiceProviders() {
   try {
     const data = await getJsonWithFallback('profile.php?action=providers');
     if (data.success && Array.isArray(data.providers)) {
+      serviceProvidersLoadedFromServer = true;
       serviceProviders = data.providers;
       renderDynamicServiceFilters();
       renderGrid();
@@ -422,7 +428,7 @@ async function loadAdminProfileProviderSelect() {
   if (!select || !currentUser || normalizeRole(currentUser.role) !== 'admin') return;
 
   try {
-    const data = await getJsonWithFallback('profile.php?action=providers');
+    const data = await getJsonWithFallback(`profile.php?action=providers&includeUnapproved=1&adminId=${encodeURIComponent(currentUser.id)}`);
     if (!data.success || !Array.isArray(data.providers)) {
       throw new Error(data.message || 'Could not load providers');
     }
@@ -855,7 +861,92 @@ function validateSignupInput({ fullName, email, phone, password, role, category 
   return null;
 }
 
+function ensureAuthOverlay() {
+  if (document.getElementById('authOverlay') || IS_AUTH_PAGE) {
+    return;
+  }
+
+  const overlay = document.createElement('div');
+  overlay.className = 'overlay auth-inline-overlay';
+  overlay.id = 'authOverlay';
+  overlay.addEventListener('click', closeAuth);
+  overlay.innerHTML = `
+    <div class="modal auth-card inline-auth-card" onclick="event.stopPropagation()">
+      <button class="m-close" type="button" onclick="closeAuth()">x</button>
+      <div class="m-head">
+        <h2 id="mTitle">Welcome Back!</h2>
+        <p id="mSub">Sign in to your Ghar Sewa account</p>
+      </div>
+
+      <div class="m-tabs" id="roleTabs">
+        <button class="mtab active" type="button" onclick="setRole('customer',this)">Customer</button>
+        <button class="mtab" type="button" onclick="setRole('provider',this)">Service Provider</button>
+        <button class="mtab" type="button" onclick="setRole('admin',this)">Admin</button>
+      </div>
+      <p id="roleHint" class="page-note auth-role-hint">Customer signup: phone required, standard password rules.</p>
+
+      <div class="m-body">
+        <form id="loginForm">
+          <div id="loginError" class="error-msg" style="display:none;"></div>
+          <div class="fg">
+            <label>Email Address</label>
+            <input class="fc" type="email" id="loginEmail" placeholder="you@example.com"/>
+          </div>
+          <div class="fg">
+            <label>Password</label>
+            <input class="fc" type="password" id="loginPassword" placeholder="Password" required/>
+          </div>
+          <button class="sbtn" type="submit">Sign In</button>
+          <p class="alt">No account? <a onclick="switchForm('reg')">Register here</a></p>
+        </form>
+
+        <form id="regForm" style="display:none">
+          <div id="regError" class="error-msg" style="display:none;"></div>
+          <input type="hidden" id="regRole" value="customer" />
+          <div class="fg">
+            <label>Full Name</label>
+            <input class="fc" type="text" id="regName" placeholder="Ram Bahadur" required/>
+          </div>
+          <div class="fg">
+            <label>Email</label>
+            <input class="fc" type="email" id="regEmail" placeholder="you@example.com" required/>
+          </div>
+          <div class="fg">
+            <label>Phone</label>
+            <input class="fc" type="tel" id="regPhone" placeholder="+977 98XXXXXXXX"/>
+          </div>
+          <div class="fg" id="skillRow" style="display:none">
+            <label>Your Primary Skill</label>
+            <select class="fc" id="regSkill">
+              <option value="">-- Select a skill --</option>
+              <option>Plumber</option><option>Electrician</option>
+              <option>Cook / Chef</option><option>Babysitter</option>
+              <option>Cleaner</option><option>Carpenter</option>
+              <option>Painter</option><option>Technician</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label>Password</label>
+            <input class="fc" type="password" id="regPassword" placeholder="Min. 8 characters" required/>
+          </div>
+          <button class="sbtn" type="submit">Create Account</button>
+          <p class="alt">Have an account? <a onclick="switchForm('login')">Sign in</a></p>
+        </form>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(overlay);
+
+  const loginForm = document.getElementById('loginForm');
+  if (loginForm) loginForm.onsubmit = handleLogin;
+  const regForm = document.getElementById('regForm');
+  if (regForm) regForm.onsubmit = handleSignup;
+  setRole(selectedRole || 'customer', document.querySelector('#roleTabs .mtab.active'));
+}
+
 function openAuth(mode) {
+  ensureAuthOverlay();
   const overlay = document.getElementById('authOverlay');
   const loginForm = document.getElementById('loginForm');
   const regForm = document.getElementById('regForm');
@@ -914,7 +1005,7 @@ function closeAuth(e) {
     return;
   }
 
-  if (!currentUser) {
+  if (!currentUser && document.body.classList.contains('auth-locked')) {
     showError('Please login or create an account to continue');
     return;
   }
@@ -1046,6 +1137,8 @@ async function handleLogin(e) {
       } else {
         closeAuth();
         updateUIForLoggedInUser();
+        syncAuthControls();
+        applyRoleBasedVisibility();
       }
     } else {
       showError(data.message);
@@ -1094,6 +1187,8 @@ async function handleSignup(e) {
       } else {
         closeAuth();
         updateUIForLoggedInUser();
+        syncAuthControls();
+        applyRoleBasedVisibility();
       }
     } else {
       showError(data.message);
@@ -1134,7 +1229,7 @@ function updateUIForLoggedInUser() {
     if (!avatar) {
       return;
     }
-    avatar.textContent = currentUser.fullName.charAt(0).toUpperCase();
+    setAvatarImage(avatar, getStoredProfilePicture(), currentUser.fullName);
     avatar.title = currentUser.fullName + ' (' + currentUser.role + ')';
   }
 }
@@ -1153,10 +1248,14 @@ function syncAuthControls() {
     loginButton = document.createElement('a');
     loginButton.id = 'loginBtn';
     loginButton.className = 'login-btn';
-    loginButton.href = 'auth.html';
     loginButton.textContent = 'Login / Sign Up';
     navRight.insertBefore(loginButton, navRight.querySelector('.avatar'));
   }
+  loginButton.href = '#';
+  loginButton.onclick = function (event) {
+    event.preventDefault();
+    openAuth('login');
+  };
 
   if (!logoutButton) {
     logoutButton = document.getElementById('logoutBtn');
@@ -1172,9 +1271,12 @@ function syncAuthControls() {
     navRight.insertBefore(logoutButton, navRight.querySelector('.avatar'));
   }
 
-  const shouldShowAuthButtons = !currentUser;
   logoutButton.style.display = currentUser ? 'inline-flex' : 'none';
-  loginButton.style.display = shouldShowAuthButtons ? 'inline-flex' : 'none';
+  loginButton.style.display = 'inline-flex';
+  loginButton.textContent = currentUser ? 'Switch Account' : 'Login / Sign Up';
+  loginButton.title = currentUser
+    ? `Currently signed in as ${formatRoleName(currentUser.role)}. Switch to another account.`
+    : 'Login or create an account';
 }
 
 function setFeatureOutput(id, payload) {
@@ -1229,7 +1331,8 @@ function readProfileForm() {
     skills: document.getElementById('profileSkills')?.value.trim() || '',
     qualifications: document.getElementById('profileQualifications')?.value.trim() || '',
     jobPreferences: document.getElementById('profilePreferences')?.value.trim() || '',
-    hiringRequirements: document.getElementById('profileHiringReq')?.value.trim() || ''
+    hiringRequirements: document.getElementById('profileHiringReq')?.value.trim() || '',
+    profilePicture: getStoredProfilePicture()
   };
 }
 
@@ -1245,6 +1348,98 @@ function fillProfileForm(profile) {
     const field = document.getElementById(id);
     if (field) field.value = value || '';
   });
+
+  const profilePicture = profile.profile_picture ?? profile.profilePicture;
+  if (profilePicture !== undefined) {
+    storeProfilePicture(profilePicture);
+  }
+}
+
+function getProfilePictureCacheKey() {
+  const targetUserId = getProfileTargetUserId();
+  return targetUserId ? `profile_picture_${targetUserId}` : '';
+}
+
+function getStoredProfilePicture() {
+  const cacheKey = getProfilePictureCacheKey();
+  if (cacheKey) {
+    return localStorage.getItem(cacheKey) || currentUser?.profilePicture || currentUser?.profile_picture || '';
+  }
+  return currentUser?.profilePicture || currentUser?.profile_picture || '';
+}
+
+function setAvatarImage(element, imageData, fallbackName) {
+  if (!element) return;
+  const initial = (fallbackName || '?').charAt(0).toUpperCase();
+  if (imageData) {
+    element.textContent = '';
+    element.style.backgroundImage = `url("${imageData}")`;
+    element.classList.add('has-photo');
+  } else {
+    element.textContent = initial;
+    element.style.backgroundImage = '';
+    element.classList.remove('has-photo');
+  }
+}
+
+function renderProfilePicture() {
+  if (!currentUser) return;
+  const imageData = getStoredProfilePicture();
+  setAvatarImage(document.getElementById('profileAvatarBig'), imageData, currentUser.fullName);
+  setAvatarImage(document.querySelector('.avatar'), imageData, currentUser.fullName);
+  const removeBtn = document.getElementById('removeProfilePictureBtn');
+  if (removeBtn) removeBtn.style.display = imageData ? 'inline-flex' : 'none';
+}
+
+function storeProfilePicture(imageData) {
+  const cacheKey = getProfilePictureCacheKey();
+  if (cacheKey) {
+    if (imageData) {
+      localStorage.setItem(cacheKey, imageData);
+    } else {
+      localStorage.removeItem(cacheKey);
+    }
+  }
+
+  if (currentUser && String(getProfileTargetUserId()) === String(currentUser.id)) {
+    currentUser.profilePicture = imageData || '';
+    currentUser.profile_picture = imageData || '';
+    localStorage.setItem('user', JSON.stringify(currentUser));
+  }
+
+  renderProfilePicture();
+}
+
+function handleProfilePictureChange(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    setProfileStatus('Please choose an image file.', 'error');
+    event.target.value = '';
+    return;
+  }
+
+  if (file.size > 1.5 * 1024 * 1024) {
+    setProfileStatus('Profile picture must be smaller than 1.5 MB.', 'error');
+    event.target.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = () => {
+    storeProfilePicture(reader.result);
+    setProfileStatus('Photo added. Press Save Profile to keep it on the server.', 'success');
+  };
+  reader.onerror = () => setProfileStatus('Could not read the selected image.', 'error');
+  reader.readAsDataURL(file);
+}
+
+function removeProfilePicture() {
+  storeProfilePicture('');
+  const input = document.getElementById('profilePictureInput');
+  if (input) input.value = '';
+  setProfileStatus('Profile photo removed. Press Save Profile to update the server.', 'success');
 }
 
 async function handleSaveProfile() {
@@ -1325,7 +1520,8 @@ async function handleLoadProfile() {
           skills: data.profile.skills || '',
           qualifications: data.profile.qualifications || '',
           jobPreferences: data.profile.job_preferences || '',
-          hiringRequirements: data.profile.hiring_requirements || ''
+          hiringRequirements: data.profile.hiring_requirements || '',
+          profilePicture: data.profile.profile_picture || ''
         }));
       }
       setProfileStatus(`${getProfileTargetLabel()} loaded`, 'success');
@@ -1733,6 +1929,7 @@ async function payServiceRequest(requestId, amount, isServer, actionSource) {
   
   if (!confirm(`Are you sure you want to pay Rs. ${amount}?`)) return;
 
+  let response = null;
   try {
     const payload = {
       action: 'pay',
@@ -1742,27 +1939,27 @@ async function payServiceRequest(requestId, amount, isServer, actionSource) {
       notes: "Paid from message thread"
     };
     
-    const response = await postJsonWithFallback('payment.php?action=pay', payload);
-    
-    if (response && response.success) {
-      alert("Payment successful!");
-      // Reload current thread
-      if (actionSource) {
-        openLocalServiceRequest(requestId, isServer);
-      } else {
-        const reqs = await loadServiceRequestsForCurrentUser();
-        renderMessageList(reqs);
-        // Refresh thread if it's the active one
-        if (currentLocalRequestId === requestId) {
-           openLocalServiceRequest(requestId, isServer);
-        }
-      }
-    } else {
-      alert("Payment failed: " + (response ? response.message : 'Unknown error'));
-    }
+    response = await postJsonWithFallback('payment.php?action=pay', payload);
   } catch (err) {
     alert("Error making payment.");
     console.error(err);
+    return;
+  }
+
+  if (response && response.success) {
+    alert("Payment successful!");
+    try {
+      const reqs = await loadServiceRequestsForCurrentUser();
+      renderMessageList(reqs);
+      if (actionSource || String(currentLocalRequestId) === String(requestId)) {
+        await openLocalServiceRequest(requestId, isServer);
+      }
+    } catch (err) {
+      console.error('Payment screen refresh failed:', err);
+      await openLocalServiceRequest(requestId, isServer);
+    }
+  } else {
+    alert("Payment failed: " + (response ? response.message : 'Unknown error'));
   }
 }
 
@@ -1795,8 +1992,15 @@ function renderLocalRequestThread(request) {
     : request.providerName || 'Service Request';
   if (roleEl) roleEl.textContent = 'Request details';
   if (composer) composer.style.display = 'none';
-  document.querySelectorAll('.msg-contact').forEach(el => el.classList.remove('active'));
-  event && event.currentTarget && event.currentTarget.classList.add('active');
+  document.querySelectorAll('.msg-contact').forEach(el => {
+    el.classList.remove('active');
+    if (el.classList.contains('local-request-contact')) {
+      const clickHandler = el.getAttribute('onclick') || '';
+      if (clickHandler.includes(`openLocalServiceRequest(${request.id},`)) {
+        el.classList.add('active');
+      }
+    }
+  });
 
   if (thread) {
     thread.innerHTML = `
@@ -2195,7 +2399,8 @@ function loadProfileDisplay() {
     badge.className = 'profile-role-badge role-' + r;
   }
   const av = document.getElementById('profileAvatarBig');
-  if (av) av.textContent = (currentUser.fullName || '?')[0].toUpperCase();
+  if (av) setAvatarImage(av, getStoredProfilePicture(), currentUser.fullName);
+  renderProfilePicture();
   handleLoadProfile();
 }
 
@@ -2352,7 +2557,7 @@ function reviewFromSearch() {
   location.href = 'reviews.html?providerId=' + providerId;
 }
 
-/* ===== INIT ===== */
+/* ===== INIT DOM ===== */
 document.addEventListener('DOMContentLoaded', function () {
 
 
@@ -2365,8 +2570,6 @@ document.addEventListener('DOMContentLoaded', function () {
     currentUser = { ...STORED_USER, role: normalizeRole(STORED_USER.role) };
     updateUIForLoggedInUser();
   }
-
-  if (IS_AUTH_PAGE && currentUser) { location.href = getRoleHomePage(currentUser.role); return; }
 
   enforceRoleRoute();
   syncAuthControls();
@@ -2402,6 +2605,10 @@ document.addEventListener('DOMContentLoaded', function () {
   if (saveProfileBtn) saveProfileBtn.addEventListener('click', handleSaveProfile);
   const loadProfileBtn = document.getElementById('loadProfileBtn');
   if (loadProfileBtn) loadProfileBtn.addEventListener('click', handleLoadProfile);
+  const profilePictureInput = document.getElementById('profilePictureInput');
+  if (profilePictureInput) profilePictureInput.addEventListener('change', handleProfilePictureChange);
+  const removeProfilePictureBtn = document.getElementById('removeProfilePictureBtn');
+  if (removeProfilePictureBtn) removeProfilePictureBtn.addEventListener('click', removeProfilePicture);
   loadAdminProfileProviderSelect();
   if (document.getElementById('profileDisplayName')) loadProfileDisplay();
 

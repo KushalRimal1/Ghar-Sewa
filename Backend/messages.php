@@ -27,7 +27,6 @@ function requireAdmin($conn, $userId) {
         respond(['success' => false, 'message' => 'Only admin can view all conversations'], 403);
     }
 }
-
 // ─── SEND MESSAGE ───────────────────────────────────────────────────────────
 if ($action === 'send') {
     $senderId   = isset($input['senderId'])   ? (int)$input['senderId']   : 0;
@@ -228,11 +227,12 @@ if ($action === 'providers' || $action === 'contacts') {
         respond(['success' => true, 'providers' => []]);
     }
 
+    $approvalFilter = $targetRole === 'provider' ? " AND COALESCE(sp.is_verified, 0) = 1" : "";
     $stmt = $conn->prepare(
         "SELECT u.id, u.full_name, u.role, sp.category
          FROM users u
          LEFT JOIN service_providers sp ON sp.user_id = u.id
-         WHERE u.id != ? AND u.role = ?
+         WHERE u.id != ? AND u.role = ? $approvalFilter
          ORDER BY u.full_name ASC"
     );
     $stmt->bind_param("is", $userId, $targetRole);

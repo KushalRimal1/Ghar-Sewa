@@ -20,6 +20,7 @@ function ensureUserProfilesTable($conn) {
         qualifications TEXT,
         job_preferences TEXT,
         hiring_requirements TEXT,
+        profile_picture LONGTEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
@@ -27,6 +28,13 @@ function ensureUserProfilesTable($conn) {
 
     if (!$conn->query($sql)) {
         respond(['success' => false, 'message' => 'Could not prepare profile storage'], 500);
+    }
+
+    $columnResult = $conn->query("SHOW COLUMNS FROM user_profiles LIKE 'profile_picture'");
+    if ($columnResult && $columnResult->num_rows === 0) {
+        if (!$conn->query("ALTER TABLE user_profiles ADD COLUMN profile_picture LONGTEXT NULL AFTER hiring_requirements")) {
+            respond(['success' => false, 'message' => 'Could not prepare profile photo storage'], 500);
+        }
     }
 }
 
@@ -75,17 +83,19 @@ if ($action === 'save') {
     $qualifications = isset($input['qualifications']) ? trim($input['qualifications']) : null;
     $jobPreferences = isset($input['jobPreferences']) ? trim($input['jobPreferences']) : null;
     $hiringRequirements = isset($input['hiringRequirements']) ? trim($input['hiringRequirements']) : null;
+    $profilePicture = isset($input['profilePicture']) ? trim($input['profilePicture']) : null;
 
     $stmt = $conn->prepare(
-        "INSERT INTO user_profiles (user_id, skills, qualifications, job_preferences, hiring_requirements)
-         VALUES (?, ?, ?, ?, ?)
+        "INSERT INTO user_profiles (user_id, skills, qualifications, job_preferences, hiring_requirements, profile_picture)
+         VALUES (?, ?, ?, ?, ?, ?)
          ON DUPLICATE KEY UPDATE
             skills = VALUES(skills),
             qualifications = VALUES(qualifications),
             job_preferences = VALUES(job_preferences),
-            hiring_requirements = VALUES(hiring_requirements)"
+            hiring_requirements = VALUES(hiring_requirements),
+            profile_picture = VALUES(profile_picture)"
     );
-    $stmt->bind_param("issss", $userId, $skills, $qualifications, $jobPreferences, $hiringRequirements);
+    $stmt->bind_param("isssss", $userId, $skills, $qualifications, $jobPreferences, $hiringRequirements, $profilePicture);
 
     if (!$stmt->execute()) {
         respond(['success' => false, 'message' => 'Could not save profile'], 500);
@@ -124,6 +134,23 @@ if ($action === 'save') {
 }
 
 if ($action === 'providers') {
+    $includeUnapproved = isset($_GET['includeUnapproved']) && $_GET['includeUnapproved'] === '1';
+    $adminId = isset($_GET['adminId']) ? (int)$_GET['adminId'] : 0;
+
+    if ($includeUnapproved) {
+        $roleStmt = $conn->prepare("SELECT role FROM users WHERE id = ?");
+        $roleStmt->bind_param("i", $adminId);
+        $roleStmt->execute();
+        $roleResult = $roleStmt->get_result();
+        $adminRole = $roleResult->num_rows ? $roleResult->fetch_assoc()['role'] : '';
+        $roleStmt->close();
+
+        if ($adminRole !== 'admin') {
+            respond(['success' => false, 'message' => 'Only admins can load unapproved providers'], 403);
+        }
+    }
+
+    $approvalFilter = $includeUnapproved ? '' : ' AND COALESCE(sp.is_verified, 0) = 1';
     $stmt = $conn->prepare(
         "SELECT
             u.id,
@@ -131,17 +158,19 @@ if ($action === 'providers') {
             u.phone,
             u.role,
             COALESCE(sp.category, '') AS category,
+            COALESCE(sp.is_verified, 0) AS is_verified,
             COALESCE(sp.rating, 0) AS rating,
             COALESCE(sp.total_reviews, 0) AS total_reviews,
             COALESCE(sp.location, '') AS location,
             p.skills,
             p.qualifications,
             p.job_preferences,
-            p.hiring_requirements
+            p.hiring_requirements,
+            p.profile_picture
          FROM users u
          LEFT JOIN service_providers sp ON sp.user_id = u.id
          LEFT JOIN user_profiles p ON p.user_id = u.id
-         WHERE u.role = 'provider'
+         WHERE u.role = 'provider' $approvalFilter
          ORDER BY u.full_name ASC"
     );
     $stmt->execute();
@@ -158,11 +187,13 @@ if ($action === 'providers') {
             'label' => formatServiceLabel($row['skills'], $category),
             'rating' => (float)$row['rating'],
             'reviews' => (int)$row['total_reviews'],
+            'isVerified' => (int)$row['is_verified'] === 1,
             'location' => $row['location'] ?? '',
             'skills' => $row['skills'] ?? '',
             'qualifications' => $row['qualifications'] ?? '',
             'jobPreferences' => $row['job_preferences'] ?? '',
-            'hiringRequirements' => $row['hiring_requirements'] ?? ''
+            'hiringRequirements' => $row['hiring_requirements'] ?? '',
+            'profilePicture' => $row['profile_picture'] ?? ''
         ];
     }
 
@@ -178,7 +209,7 @@ if ($action === 'get') {
     }
 
     $stmt = $conn->prepare(
-        "SELECT u.id, u.full_name, u.email, u.role, p.skills, p.qualifications, p.job_preferences, p.hiring_requirements
+        "SELECT u.id, u.full_name, u.email, u.role, p.skills, p.qualifications, p.job_preferences, p.hiring_requirements, p.profile_picture
          FROM users u
          LEFT JOIN user_profiles p ON p.user_id = u.id
          WHERE u.id = ?"

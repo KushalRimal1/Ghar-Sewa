@@ -5,9 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ghar Sewa - My Profile</title>
   <meta name="description" content="Manage your Ghar Sewa profile — update skills, qualifications, job preferences and more." />
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css" />
-  <script src="script.js?v=20260522-v15" defer></script>
+  <link rel="stylesheet" href="style.css?v=20260528-ui4" />
+  <script src="script.js?v=20260528-v17" defer></script>
 </head>
 <body>
 <nav id="mainNav">
@@ -30,7 +29,7 @@
       <li><a href="profile.html" class="active">Profile</a></li>
   </ul>
   <div class="nav-right">
-    <button class="bell-btn" onclick="location.href='notifications.html'">🔔</button>
+    <button class="bell-btn" onclick="location.href='notifications.html'" aria-label="Notifications"><span class="bell-icon" aria-hidden="true"></span><span class="notification-dot" aria-hidden="true"></span></button>
     <a class="avatar" href="profile.html" title="Profile">👤</a>
   </div>
 </nav>
@@ -46,7 +45,14 @@
   <div class="page-stack">
     <div class="page-card profile-info-card">
       <div class="profile-header-row">
-        <div class="profile-avatar-big" id="profileAvatarBig">👤</div>
+        <div class="profile-photo-block">
+          <div class="profile-avatar-big" id="profileAvatarBig">👤</div>
+          <input type="file" id="profilePictureInput" class="profile-picture-input" accept="image/png,image/jpeg,image/webp,image/gif" />
+          <div class="profile-photo-actions">
+            <label for="profilePictureInput" class="profile-picture-btn">Add Photo</label>
+            <button type="button" id="removeProfilePictureBtn" class="profile-picture-remove">Remove</button>
+          </div>
+        </div>
         <div class="profile-header-info">
           <h3 id="profileDisplayName">Loading...</h3>
           <p id="profileDisplayEmail" class="profile-meta">—</p>

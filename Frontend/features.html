@@ -4,9 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ghar Sewa - Role Workspace</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css" />
-  <script src="script.js?v=20260522-v15" defer></script>
+  <link rel="stylesheet" href="style.css?v=20260528-ui4" />
+  <script src="script.js?v=20260528-v17" defer></script>
 </head>
 <body>
 <nav id="mainNav">
@@ -29,7 +28,7 @@
     <li><a href="profile.html">Profile</a></li>
   </ul>
   <div class="nav-right">
-    <button class="bell-btn" onclick="location.href='notifications.html'">!</button>
+    <button class="bell-btn" onclick="location.href='notifications.html'" aria-label="Notifications"><span class="bell-icon" aria-hidden="true"></span><span class="notification-dot" aria-hidden="true"></span></button>
     <a class="avatar" href="profile.html" title="Profile">U</a>
   </div>
 </nav>
@@ -73,7 +72,7 @@
       </div>
     </article>
 
-    <article class="page-card feature-panel" data-role-allow="customer,provider,admin">
+    <article class="page-card feature-panel workspace-profile-panel" data-role-allow="provider,admin">
       <div class="screen-topbar">
         <span>Profile Management</span>
         <span class="screen-chip">Shared</span>
@@ -84,7 +83,7 @@
           <option value="">Select service provider to manage</option>
         </select>
       </div>
-      <div class="feature-form-grid">
+      <div class="feature-form-grid workspace-profile-grid">
         <textarea id="profileSkills" class="feature-input" placeholder="Skills or needed service"></textarea>
         <textarea id="profileQualifications" class="feature-input" placeholder="Qualifications or service expectations"></textarea>
         <textarea id="profilePreferences" class="feature-input" placeholder="Job preferences, location, budget, timing"></textarea>
@@ -126,4 +125,3 @@
 </section>
 </body>
 </html>
-

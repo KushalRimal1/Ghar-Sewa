@@ -4,18 +4,34 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ghar Sewa - Login</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css" />
-  <script src="script.js?v=20260522-v15" defer></script>
+  <link rel="stylesheet" href="style.css?v=20260528-ui4" />
+  <script src="script.js?v=20260528-v17" defer></script>
 </head>
 <body>
 <section class="app-page auth-page">
   <div class="auth-shell">
     <div class="auth-copy">
-      <p class="section-eyebrow">Welcome back</p>
-      <h1>Sign in as Customer, Service Provider, or Admin</h1>
-      <p>Choose your role, then log in or create a new account. After logout, this is the first screen you will see.</p>
-      <a class="auth-back" href="index.html">← Back to Home</a>
+      <a class="auth-brand" href="index.html">
+        <svg class="logo-icon" viewBox="0 0 36 36" fill="none">
+          <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="#2ECC71" opacity="0.18"/>
+          <path d="M18 3L3 14v19h9V23h12v10h9V14L18 3z" fill="none" stroke="#2ECC71" stroke-width="2.2" stroke-linejoin="round"/>
+          <path d="M14 33V24h8v9" fill="none" stroke="#2ECC71" stroke-width="2"/>
+          <circle cx="26" cy="9" r="4" fill="#2ECC71"/>
+        </svg>
+        <span class="logo-text">GHAR <span>SEWA</span></span>
+      </a>
+
+      <p class="section-eyebrow">Account Access</p>
+      <h1>One place for every Ghar Sewa role.</h1>
+      <p>Choose the role you want to use, then sign in or create an account. Switching from customer to service provider or admin works from this same page.</p>
+
+      <div class="auth-highlights" aria-label="Account benefits">
+        <span>Customer bookings</span>
+        <span>Provider workspace</span>
+        <span>Admin control</span>
+      </div>
+
+      <a class="auth-back" href="index.html">Back to Home</a>
     </div>
 
     <div class="modal auth-card">
@@ -29,7 +45,7 @@
         <button class="mtab" onclick="setRole('provider',this)">Service Provider</button>
         <button class="mtab" onclick="setRole('admin',this)">Admin</button>
       </div>
-      <p id="roleHint" class="page-note" style="margin: 0 0 14px;">Customer signup: phone required, standard password rules.</p>
+      <p id="roleHint" class="page-note auth-role-hint">Customer signup: phone required, standard password rules.</p>
 
       <div class="m-body">
         <form id="loginForm" onsubmit="handleLogin(event)">
@@ -40,11 +56,10 @@
           </div>
           <div class="fg">
             <label>Password</label>
-            <input class="fc" type="password" id="loginPassword" placeholder="••••••••" required/>
+            <input class="fc" type="password" id="loginPassword" placeholder="Password" required/>
           </div>
-          <button class="sbtn" type="submit">Sign In →</button>
+          <button class="sbtn" type="submit">Sign In</button>
           <p class="alt">No account? <a onclick="switchForm('reg')">Register here</a></p>
-          
         </form>
 
         <form id="regForm" style="display:none" onsubmit="handleSignup(event)">
@@ -74,17 +89,14 @@
           </div>
           <div class="fg">
             <label>Password</label>
-            <input class="fc" type="password" id="regPassword" placeholder="Min. 6 characters" required/>
+            <input class="fc" type="password" id="regPassword" placeholder="Min. 8 characters" required/>
           </div>
-          <button class="sbtn" type="submit">Create Account →</button>
+          <button class="sbtn" type="submit">Create Account</button>
           <p class="alt">Have an account? <a onclick="switchForm('login')">Sign in</a></p>
         </form>
-
-        
       </div>
     </div>
   </div>
 </section>
 </body>
 </html>
-
