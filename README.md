@@ -1,0 +1,1 @@
+Ghar Sewa is a web-based platform that connects users with trusted service providers for household services such as plumbing, electrical work, cleaning, and maintenance. The system enables easy service booking, provider management, and efficient communication between customers and service professionals.
