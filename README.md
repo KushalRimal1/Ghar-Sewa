@@ -110,3 +110,7 @@ screenshots/
 ├── login.png
 ├── booking.png
 └── dashboard.png
+
+👨‍💻 Developed By
+Kushal Rimal
+Bachelor of Information Technology (BIT)
