@@ -8,7 +8,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PHP-Backend-blue?style=for-the-badge">
   <img src="https://img.shields.io/badge/MySQL-Database-orange?style=for-the-badge">
-  <img src="https://img.shields.io/badge/Frontend-purple?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Frontend-Html-CSSandJSpurple?style=for-the-badge">
   <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge">
 </p>
 
