@@ -100,17 +100,14 @@ To develop a centralized platform that simplifies the process of finding, bookin
 
 ---
 
-## 📷 Screenshots
+## 👨‍💻 Developed By
 
-> Add project screenshots here
+**Kushal Rimal**  
+🎓 Bachelor of Information Technology (BIT)  
+📍 Kathmandu, Nepal  
 
-```bash
-screenshots/
-├── homepage.png
-├── login.png
-├── booking.png
-└── dashboard.png
+- 📧 Email: kushalprimal@example.com  
+- 🐙 GitHub: https://github.com/KushalRimal1
+- 💼 LinkedIn: https://www.linkedin.com/in/kusal-rimal-533aba366/
 
-👨‍💻 Developed By
-Kushal Rimal
-Bachelor of Information Technology (BIT)
+---
